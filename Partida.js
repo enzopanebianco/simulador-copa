@@ -20,24 +20,28 @@ export class Partida {
         this.selecaoCasa.saldo = this.selecaoCasa.saldo + (casaGols - visitanteGols)
         this.selecaoVisitante.saldo = this.selecaoVisitante.saldo + (visitanteGols - casaGols)
 
-        if (casaGols === visitanteGols) return { vencedor: null, derrotado: null }
+        const placar = ` ${this.selecaoCasa.nome} ${casaGols} X ` +
+            `${visitanteGols} ${this.selecaoVisitante.nome}`
+
+        if (casaGols === visitanteGols) return { vencedor: null, derrotado: null, placar }
 
         let vencedor = casaGols > visitanteGols ?
             this.selecaoCasa : this.selecaoVisitante
         let derrotado = casaGols < visitanteGols ?
             this.selecaoCasa : this.selecaoVisitante
-            // Caso vitoria setar 3 pontos para a selecao vencedora e setar vitorias e derrotas
+        // Caso vitoria setar 3 pontos para a selecao vencedora e setar vitorias e derrotas
         vencedor.vitorias += 1
         derrotado.derrotas += 1
         vencedor.pontuacao += 3
         return {
             vencedor,
-            derrotado
+            derrotado,
+            placar
         }
     }
 
     jogarFaseDeGrupos() {
-        const { vencedor } = this.jogar()
+        const { vencedor,placar } = this.jogar()
         //Setar pontuacao
         // Caso empate setar 1 ponto para as duas selecoes
         if (vencedor === null) {
@@ -45,10 +49,12 @@ export class Partida {
             this.selecaoVisitante.pontuacao++
         }
 
+        console.log(placar)
+
     }
 
     jogarMataMata() {
-        let { vencedor } = this.jogar()
+        let { vencedor,placar } = this.jogar()
         //Caso haja empate, a partida irá para os penâltis
         if (vencedor === null) {
             let penaltisCasa = Math.random()
@@ -62,7 +68,7 @@ export class Partida {
         //Classificando vencedores para a próxima fase
         let faseIndex = fases.indexOf(vencedor.colocacao)
         vencedor.colocacao = fases[++faseIndex]
-
+        console.log(placar)
         return vencedor
     }
 }
